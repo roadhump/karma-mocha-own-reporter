@@ -46,9 +46,7 @@ var Reporter = function(baseReporterDecorator, formatError, reportSlowerThan, pl
     baseReporterDecorator(this);
 
     var reporterName = (pluginConfig && pluginConfig.reporter) || 'spec';
-    var runner = new EventEmitter();
     var MochaReporter = getMochaReporter(reporterName);
-    var mochaReporter = new MochaReporter(runner); // eslint-disable-line no-unused-vars
 
     var createMochaTestResult = function(result) {
 
@@ -94,7 +92,12 @@ var Reporter = function(baseReporterDecorator, formatError, reportSlowerThan, pl
 
     };
 
+    var runner;
+
     this.onRunStart = function(browsers) {
+
+        runner = new EventEmitter();
+        var mochaReporter = new MochaReporter(runner); // eslint-disable-line no-unused-vars
 
         runner.emit('start');
         runner.emit('suite', {
@@ -160,6 +163,15 @@ var Reporter = function(baseReporterDecorator, formatError, reportSlowerThan, pl
     };
 
     this.onRunComplete = function(browsers, results) {
+
+        var revLastSuites = lastSuites.slice().reverse();
+
+        lastSuites = [];
+        revLastSuites.forEach(function(suiteName, k) {
+
+            runner.emit('suite end');
+
+        });
 
         runner.emit('suite end');
         runner.emit('end');
