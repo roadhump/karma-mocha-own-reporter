@@ -1,6 +1,6 @@
 {
   "name": "karma-mocha-own-reporter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Karma plugin to make possible to use Mocha own reporters.",
   "main": "index.js",
   "scripts": {
