@@ -117,34 +117,31 @@ var Reporter = function(baseReporterDecorator, formatError, reportSlowerThan, pl
 
         var suites = result.suite;
 
-        var revSuites = suites.slice().reverse();
-        var revLastSuites = lastSuites.slice().reverse();
+        var maxCommon = 0;
 
-        revSuites.forEach(function(suiteName, k) {
+        for (var i = 0, n = Math.min(lastSuites.length, suites.length); i < n; i++) {
 
-            if (suiteName !== revLastSuites[k] && revLastSuites[k]) {
+            if (lastSuites[i] === suites[i]) maxCommon = i + 1;
+            else break;
 
-                revLastSuites[k] = null;
-                runner.emit('suite end');
+        }
 
-            }
+        lastSuites.slice(maxCommon).reverse().forEach(function(suiteName) {
+
+            runner.emit('suite end');
+
+        });
+
+        suites.slice(maxCommon).reverse().forEach(function(suiteName) {
+
+            runner.emit('suite', {
+                title: suiteName,
+                root: false
+            });
 
         });
 
-        suites.forEach(function(suiteName, k) {
-
-            if (lastSuites[k] !== suiteName) {
-
-                runner.emit('suite', {
-                    title: suiteName,
-                    root: false
-                });
-
-                lastSuites[k] = suiteName;
-
-            }
-
-        });
+        lastSuites = suites;
 
         var mochaTestResult = createMochaTestResult(result);
 
