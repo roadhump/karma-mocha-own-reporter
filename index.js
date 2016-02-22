@@ -132,7 +132,7 @@ var Reporter = function(baseReporterDecorator, formatError, reportSlowerThan, pl
 
         });
 
-        suites.slice(maxCommon).reverse().forEach(function(suiteName) {
+        suites.slice(maxCommon).forEach(function(suiteName) {
 
             runner.emit('suite', {
                 title: suiteName,
